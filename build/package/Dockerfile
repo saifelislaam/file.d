@@ -26,6 +26,9 @@ RUN go build -trimpath \
 # Deploy
 FROM $APP_IMAGE
 
+RUN apt update
+RUN apt install systemd
+
 WORKDIR /file.d
 
 COPY --from=build /file.d/file.d /file.d/file.d
