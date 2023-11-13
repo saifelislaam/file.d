@@ -20,7 +20,7 @@ type PluginKind string
 type InputPlugin interface {
 	Start(config AnyConfig, params *InputPluginParams)
 	Stop()
-	Commit(*Event)
+	Commit(...*Event)
 	PassEvent(event *Event) bool
 }
 

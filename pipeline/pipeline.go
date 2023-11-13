@@ -55,7 +55,7 @@ type ActionPluginController interface {
 }
 
 type OutputPluginController interface {
-	Commit(event *Event) // notify input plugin that event is successfully processed and save offsets
+	Commit(events ...*Event) // notify input plugin that event is successfully processed and save offsets
 	Error(err string)
 }
 
@@ -490,8 +490,28 @@ func (p *Pipeline) streamEvent(event *Event) uint64 {
 	return p.streamer.putEvent(streamID, event.streamName, event)
 }
 
-func (p *Pipeline) Commit(event *Event) {
-	p.finalize(event, true, true)
+func (p *Pipeline) Commit(events ...*Event) {
+	p.input.Commit(events...)
+	if p.eventLogEnabled {
+		p.eventLogMu.Lock()
+	}
+	for _, event := range events {
+		if event.IsTimeoutKind() {
+			continue
+		}
+		p.outputEvents.Inc()
+		p.outputSize.Add(int64(event.Size))
+		event.stream.commit(event)
+
+		if p.eventLogEnabled {
+			p.eventLog = append(p.eventLog, event.Root.EncodeToString())
+		}
+
+		p.eventPool.back(event)
+	}
+	if p.eventLogEnabled {
+		p.eventLogMu.Unlock()
+	}
 }
 
 func (p *Pipeline) Error(err string) {
