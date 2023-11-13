@@ -73,5 +73,8 @@ func (c *Config) Validate(t *testing.T) {
 	test.WaitProcessEvents(t, c.Count*c.Partition, 3*time.Second, 20*time.Second, logFilePattern)
 	matches := test.GetMatches(t, logFilePattern)
 	assert.True(t, len(matches) > 0, "no files with processed events")
-	require.Equal(t, c.Count*c.Partition, test.CountLines(t, logFilePattern), "wrong number of processed events")
+	// depending on the offsets commit strategy when oldest offsets are chosen
+	// input kafka plugin commits earliest offsets from the batch,
+	// so the amount of processed events can be more than sent
+	require.LessOrEqual(t, c.Count*c.Partition, test.CountLines(t, logFilePattern), "wrong number of processed events")
 }

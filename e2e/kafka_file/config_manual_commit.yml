@@ -1,0 +1,8 @@
+pipelines:
+  kafka_file_manual_commit:
+    input:
+      type: kafka
+      offset: oldest
+      manual_offsets_commit_interval: 1s
+    output:
+      type: file

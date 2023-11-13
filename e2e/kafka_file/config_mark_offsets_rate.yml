@@ -1,0 +1,8 @@
+pipelines:
+  kafka_file_mark_offsets_rate:
+    input:
+      type: kafka
+      offset: oldest
+      mark_offsets_rate: 3
+    output:
+      type: file

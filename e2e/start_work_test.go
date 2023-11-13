@@ -103,6 +103,28 @@ func TestE2EStabilityWorkCase(t *testing.T) {
 			cfgPath: "./kafka_file/config.yml",
 		},
 		{
+			name: "kafka_file_manual_commit",
+			e2eTest: &kafka_file.Config{
+				Topics:    []string{"quickstart_manual"},
+				Brokers:   []string{"localhost:9092"},
+				Count:     500,
+				RetTime:   "1s",
+				Partition: 4,
+			},
+			cfgPath: "./kafka_file/config_manual_commit.yml",
+		},
+		{
+			name: "kafka_file_mark_offsets_rate",
+			e2eTest: &kafka_file.Config{
+				Topics:    []string{"quickstart_rate"},
+				Brokers:   []string{"localhost:9092"},
+				Count:     500,
+				RetTime:   "1s",
+				Partition: 4,
+			},
+			cfgPath: "./kafka_file/config_mark_offsets_rate.yml",
+		},
+		{
 			name: "join_throttle",
 			e2eTest: &join_throttle.Config{
 				Count: 1000,
