@@ -444,7 +444,7 @@ func (p *Plugin) processChunk(sourceID pipeline.SourceID, readBuff []byte, event
 func (p *Plugin) Stop() {
 }
 
-func (p *Plugin) Commit(_ *pipeline.Event) {
+func (p *Plugin) Commit(_ ...*pipeline.Event) {
 	// todo: don't reply with OK till all events in request will be committed
 }
 

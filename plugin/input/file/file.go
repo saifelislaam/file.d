@@ -219,8 +219,10 @@ func (p *Plugin) startWorkers() {
 	p.logger.Infof("workers created, count=%d", len(p.workers))
 }
 
-func (p *Plugin) Commit(event *pipeline.Event) {
-	p.jobProvider.commit(event)
+func (p *Plugin) Commit(events ...*pipeline.Event) {
+	for _, event := range events {
+		p.jobProvider.commit(event)
+	}
 }
 
 func (p *Plugin) Stop() {

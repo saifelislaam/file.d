@@ -142,8 +142,8 @@ func (p *Plugin) Start(config pipeline.AnyConfig, params *pipeline.InputPluginPa
 }
 
 // Commit event.
-func (p *Plugin) Commit(event *pipeline.Event) {
-	p.fp.Commit(event)
+func (p *Plugin) Commit(events ...*pipeline.Event) {
+	p.fp.Commit(events...)
 }
 
 // Stop plugin work.

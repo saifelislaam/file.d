@@ -122,8 +122,17 @@ func (p *Plugin) Stop() {
 	}
 }
 
-func (p *Plugin) Commit(event *pipeline.Event) {
-	p.state.TS = event.Offset
+func (p *Plugin) Commit(events ...*pipeline.Event) {
+	if len(events) == 0 {
+		return
+	}
+	minOffset := events[0].Offset
+	for i := 1; i < len(events); i++ {
+		if events[i].Offset < minOffset {
+			minOffset = events[i].Offset
+		}
+	}
+	p.state.TS = minOffset
 
 	if err := offset.SaveYAML(p.config.OffsetsFile, p.state); err != nil {
 		p.offsetErrorsMetric.WithLabelValues().Inc()

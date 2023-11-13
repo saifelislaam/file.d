@@ -127,9 +127,13 @@ func (p *Plugin) Stop() {
 	}
 }
 
-func (p *Plugin) Commit(event *pipeline.Event) {
+func (p *Plugin) Commit(events ...*pipeline.Event) {
+	if len(events) == 0 {
+		return
+	}
+	lastEvent := events[len(events)-1]
 	offInfo := *p.offInfo.Load()
-	offInfo.set(strings.Clone(event.Root.Dig("__CURSOR").AsString()))
+	offInfo.set(strings.Clone(lastEvent.Root.Dig("__CURSOR").AsString()))
 	p.offInfo.Store(&offInfo)
 
 	if err := offset.SaveYAML(p.config.OffsetsFile, offInfo); err != nil {

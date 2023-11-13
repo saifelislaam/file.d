@@ -35,8 +35,11 @@ func (p *Plugin) Start(_ pipeline.AnyConfig, params *pipeline.InputPluginParams)
 func (p *Plugin) Stop() {
 }
 
-func (p *Plugin) Commit(event *pipeline.Event) {
-	if p.commitFn != nil {
+func (p *Plugin) Commit(events ...*pipeline.Event) {
+	if p.commitFn == nil {
+		return
+	}
+	for _, event := range events {
 		p.commitFn(event)
 	}
 }
