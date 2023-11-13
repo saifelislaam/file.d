@@ -213,9 +213,7 @@ func (b *Batcher) commitBatch(batch *Batch) BatchStatus {
 	b.commitSeq++
 	b.commitWaitingSeconds.Observe(time.Since(now).Seconds())
 
-	for i := range batch.Events {
-		b.opts.Controller.Commit(batch.Events[i])
-	}
+	b.opts.Controller.Commit(batch.Events...)
 
 	status := batch.status
 	b.freeBatches <- batch

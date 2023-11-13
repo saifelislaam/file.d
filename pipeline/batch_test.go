@@ -17,8 +17,10 @@ type batcherTail struct {
 	commit func(event *Event)
 }
 
-func (b *batcherTail) Commit(event *Event) {
-	b.commit(event)
+func (b *batcherTail) Commit(events ...*Event) {
+	for _, event := range events {
+		b.commit(event)
+	}
 }
 
 func (b *batcherTail) Error(err string) {
